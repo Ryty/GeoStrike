@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed;
+    public float rotateSpeedModifier;
     public VirtualJoystick controlJoystick;
 
     private Vector2 moveDir;
@@ -19,20 +20,28 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (controlJoystick.inputDirection != Vector2.zero)
+        if(controlJoystick.inputDirection != Vector2.zero)
         {
-            moveDir = controlJoystick.inputDirection * moveSpeed;
+            HandleRotation();
 
-            float rot = Mathf.Rad2Deg * Mathf.Atan2(controlJoystick.inputDirection.y, controlJoystick.inputDirection.x) - 90f;
-
-            transform.rotation = Quaternion.AngleAxis(rot, Vector3.forward);
-
-            Debug.Log(rot);
+            moveDir = transform.up * controlJoystick.inputDirection.magnitude * moveSpeed;
         }
     }
 
     private void FixedUpdate()
     {
-        rb.AddForce(moveDir);   
+        if (controlJoystick.inputDirection != Vector2.zero)
+            rb.AddForce(moveDir);
+    }
+
+    private void HandleRotation()
+    {
+        float rot = Mathf.Rad2Deg * Mathf.Atan2(controlJoystick.inputDirection.y, controlJoystick.inputDirection.x) - 90f;
+
+        Quaternion startQuat = transform.rotation;
+        Quaternion desiredQuat = Quaternion.Euler(0f, 0f, rot);
+
+        transform.rotation = Quaternion.Slerp(startQuat, desiredQuat, rotateSpeedModifier * Time.deltaTime);
+
     }
 }
