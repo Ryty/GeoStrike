@@ -603,8 +603,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapScaleMin: 0.5
   mapScaleMax: 2
-  arenasArray:
+  obstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  obstacleCountMin: 6
+  obstacleCountMax: 12
+  obstacleDistMin: 3
+  arenaPrefabs:
   - {fileID: 1333650735600950, guid: 4f15e45cb4cd2fe4cb48dd103e42671b, type: 2}
+  obstaclePrefabs:
+  - {fileID: 1624030082997446, guid: bd2189cb90a353c48bcb37d72dd60d5d, type: 2}
 --- !u!4 &1962448271
 Transform:
   m_ObjectHideFlags: 0
