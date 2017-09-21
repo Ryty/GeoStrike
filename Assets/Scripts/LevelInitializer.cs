@@ -69,7 +69,7 @@ public class LevelInitializer : MonoBehaviour
             //Powiększmy też dzieci, jeśli są
             if (trans.childCount > 0)
             {
-                Debug.Log("Jest dziecko! //LevelInitializer - 51");
+                Debug.Log("Jest dziecko!");
                 for (int j = 0; j < trans.childCount; j++)
                 {
                     if (trans.GetChild(j).GetComponent<SpriteRenderer>().drawMode == SpriteDrawMode.Tiled)
@@ -114,9 +114,19 @@ public class LevelInitializer : MonoBehaviour
             if (go.GetComponent<SpriteRenderer>())
             {
                 go.GetComponent<SpriteRenderer>().size *= Random.Range(1f, mapScale);
+                ScaleCollider(go.GetComponent<Collider2D>());
             }
 
             //Debug.DrawLine(arenaBounds.center, pos, Color.white, 20f);
+        }
+    }
+
+    private void ScaleCollider(Collider2D col)
+    {
+        if (col is CircleCollider2D)
+        {
+            CircleCollider2D circle = (CircleCollider2D)col;
+            circle.radius = (circle.gameObject.GetComponent<SpriteRenderer>().size.x / 2f) - (circle.gameObject.GetComponent<SpriteRenderer>().size.x / 2f)/10f;
         }
     }
 }
