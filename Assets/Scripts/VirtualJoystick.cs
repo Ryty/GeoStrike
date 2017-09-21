@@ -39,7 +39,7 @@ public class VirtualJoystick : MonoBehaviour, IDragHandler, IPointerDownHandler,
 
     public virtual void OnPointerDown(PointerEventData data)
     {
-        //Wzywamy OnDrag żeby przesuwać to joystick zwykłym przytrzymaniem
+        //Wzywamy OnDrag żeby przesuwać joystick zwykłym przytrzymaniem
         OnDrag(data);
     }
 

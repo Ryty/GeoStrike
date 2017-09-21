@@ -65,6 +65,6 @@ public class PlayerController : MonoBehaviour
         GameObject projectile = GameObject.Instantiate<GameObject>(projectilePrefab, transform.position + transform.up, this.transform.rotation);
         projectile.GetComponent<Rigidbody2D>().AddForce(projectile.transform.up * projectileShootForce, ForceMode2D.Impulse);
 
-        shootTimer.SetTimer(shootDelay);
+        shootTimer.SetTimer(shootDelay, true);
     }
 }
