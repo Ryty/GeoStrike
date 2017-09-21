@@ -116,7 +116,7 @@ public class LevelInitializer : MonoBehaviour
                 go.GetComponent<SpriteRenderer>().size *= Random.Range(1f, mapScale);
             }
 
-            Debug.DrawLine(arenaBounds.center, pos, Color.white, 20f);
+            //Debug.DrawLine(arenaBounds.center, pos, Color.white, 20f);
         }
     }
 }
