@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerProjectile : MonoBehaviour
 {
+    public float hitForce;
+    public float hitDamage;
+
     private void Awake()
     {
         Debug.Log("Projectile spawned.");
@@ -13,6 +16,18 @@ public class PlayerProjectile : MonoBehaviour
     {
         Debug.Log(gameObject.name + " on collision with: " + col.gameObject.name);
         if (col.collider.gameObject.layer == 8) //8 = obstacle
-            Destroy(gameObject);
+        {
+            OnContact();
+        }
+        else if(col.gameObject.GetComponent<EnemyHealth>())
+        {
+            col.gameObject.GetComponent<EnemyHealth>().OnHit(col.contacts[0].point, hitForce);
+            OnContact();
+        }
+    }
+
+    private void OnContact()
+    {
+        Destroy(gameObject);
     }
 }
