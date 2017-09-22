@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(GameMode))]
 public class LevelInitializer : MonoBehaviour
 {
-    [Header("Settings for map initialization")]
+    [Header("Settings for game initialization")]
     public float chunkSize;
     [Header("Arrays with prefabs")]
     public GameObject[] chunkPrefabsUL;
@@ -18,7 +19,6 @@ public class LevelInitializer : MonoBehaviour
     public GameObject[] chunkPrefabsLR;
 
     private int chunkAmount = 9;
-
     private bool finishedArena = false;
     
     private void Awake()
@@ -28,10 +28,14 @@ public class LevelInitializer : MonoBehaviour
 
     private IEnumerator InitLevel()
     {
+        //Zacznimy od zbudowania areny
         InitArena();
 
+        //Dopóki arena się buduje, upewnijmy się że nic dalej nie zajdzie
         while (!finishedArena)
             yield return new WaitForEndOfFrame();
+
+        GetComponent<GameMode>().StartCoroutine("StartGame");
 
         yield return null;
     }
