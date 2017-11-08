@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 212424408625393876}
   - component: {fileID: 50652480822048342}
   - component: {fileID: 114126544833539954}
+  - component: {fileID: 114925549754318034}
   - component: {fileID: 61619160515729526}
   m_Layer: 9
   m_Name: EnemySquare
@@ -99,6 +100,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16464dcd11d7c424f8e4fcad4ee465cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114925549754318034
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1195102757571676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 453dc105324103c4c8b268dae5c593bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pointsYield: 200
+  healthMax: 2
 --- !u!212 &212424408625393876
 SpriteRenderer:
   m_ObjectHideFlags: 1

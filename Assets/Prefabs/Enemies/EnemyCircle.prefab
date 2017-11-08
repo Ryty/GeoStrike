@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 58220585675734494}
   - component: {fileID: 50263351834882882}
   - component: {fileID: 114669400099150366}
+  - component: {fileID: 114222271402211318}
   m_Layer: 9
   m_Name: EnemyCircle
   m_TagString: Untagged
@@ -78,6 +79,19 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.51
+--- !u!114 &114222271402211318
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1255214479111976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 453dc105324103c4c8b268dae5c593bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pointsYield: 100
+  healthMax: 1
 --- !u!114 &114669400099150366
 MonoBehaviour:
   m_ObjectHideFlags: 1

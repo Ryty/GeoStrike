@@ -6,11 +6,12 @@ using UnityEngine;
 public class Timer : MonoBehaviour
 {
     public bool bIsFinished = true;
+    public float time { get; private set; }
 
-    private float time;
     private float timeMax;
     private Image scaledImage;
     private bool bTimingShoot = false;
+    private VoidDelegate func = null;
 
 
     private void Awake()
@@ -31,6 +32,12 @@ public class Timer : MonoBehaviour
             {
                 bIsFinished = true;
 
+                if (func != null) //jeśli mamy funkcję do użycia to ją zresetujmy i ustawmy nową
+                {
+                    func();
+                    func = null; 
+                }             
+
                 if (bTimingShoot)
                 {
                     scaledImage.fillAmount = 0f;
@@ -40,9 +47,9 @@ public class Timer : MonoBehaviour
         }
 	}
 
-    public void SetTimer(float t, bool timingShoot = false)
+    public void SetTimer(float t, bool timingShoot = false, VoidDelegate funcToCall = null, bool forceNewTime = false)
     {
-        if (bIsFinished) //Nie ustawiamy nowego timera jeśli jest już ustawiony stary
+        if (bIsFinished || forceNewTime) //Nie ustawiamy nowego timera jeśli jest już ustawiony stary. Chyba, że forsujemy nowy czas
         {
             time = t;
             timeMax = time;
@@ -54,6 +61,11 @@ public class Timer : MonoBehaviour
                 bTimingShoot = true;
                 scaledImage.fillAmount = time / timeMax;
             }
+
+            if (funcToCall != null)
+                func = funcToCall;
         }
     }
+
+    public delegate void VoidDelegate();
 }

@@ -24,7 +24,7 @@ public class SpawnerSurvival : MonoBehaviour
             //GameObject go = 
             Instantiate(enemyPrefabs[Random.Range(0, enemyPrefabs.Length)], spawnPos, new Quaternion());
 
-            gameMode.enemyCount++;
+            gameMode.HandleSpawningEnemy();
         }
     }
 }

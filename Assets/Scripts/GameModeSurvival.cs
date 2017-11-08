@@ -13,19 +13,38 @@ public enum ESurvivalState
 public class GameModeSurvival : GameMode
 {
     public ESurvivalState gameState;
+    [Header("Game mode settings")]
     public int intermissionTime;
-    public int waveCount = 1;
-    public int enemyCount = 0;
+    public float comboPerKill;
+    public float comboTimerMax;
+    [Header("Current values concering game mode")]
+    public int waveCount;
+    public int enemyCount { get; private set; }
+    public int playerScore { get; private set; }
     [HideInInspector]
-    public int playerScore = 0, comboMeter = 1;
+    public float comboMeter { get; private set; }
 
     private UIManager ui;
-    private SpawnerSurvival[] spawners;
+    private List<SpawnerSurvival> spawners = new List<SpawnerSurvival>();
+    private float comboTimerCurrent;
+    private Timer comboTimer;
 
+    private void Start()
+    {
+        
+    }
+
+    //------------Handles starting the game and changing it depending on its' state---------
     public override IEnumerator StartGame()
     {
-        ui = FindObjectOfType<UIManager>();
-        spawners = FindObjectsOfType<SpawnerSurvival>();
+        SetStartingValues();
+        comboTimer = gameObject.AddComponent<Timer>();
+
+        ui = FindObjectOfType<UIManager>();        
+        ui.SetComboTimer(comboTimer);
+        
+        foreach (SpawnerSurvival s in FindObjectsOfType<SpawnerSurvival>())
+            spawners.Add(s);
 
         yield return StartCoroutine(HandleIntermission(10));
 
@@ -78,18 +97,97 @@ public class GameModeSurvival : GameMode
         }
 
         ui.scoreText.enabled = false;
+        waveCount++;
         yield break;
     }
 
     private IEnumerator SpawnEnemies()
     {
-        foreach(SpawnerSurvival spawner in spawners)
+        //Przygotowywanie listy spawnerów
+        List<SpawnerSurvival> currentSpawners = new List<SpawnerSurvival>();
+        foreach (SpawnerSurvival s in spawners) currentSpawners.Add(s);
+        currentSpawners.Remove(FindNearestSpawner());
+
+        foreach(SpawnerSurvival s in currentSpawners)
         {
-            spawner.Spawn(2);
+            s.Spawn(CalculateEnemyCount(waveCount) / currentSpawners.Count);
         }
 
-        Debug.Log("Spawned " + enemyCount + " enemies.");
+        Debug.Log(currentSpawners.Count + " Spawned " + enemyCount + " enemies.");
 
         yield break;
+    }
+
+    private void SetStartingValues()
+    {
+        waveCount = 1;
+        enemyCount = 0;
+        playerScore = 0;
+        comboMeter = 1f;
+    }
+    //------------Handles spawning enemies---------
+    private int CalculateEnemyCount(int wave)
+    {
+        if (wave == 1)
+            return 8;
+        else
+            return CalculateEnemyCount(wave - 1) + (wave * CalculateEnemyCount(1) / 3);
+    }
+
+    private SpawnerSurvival FindNearestSpawner()
+    {
+        PlayerController player = FindObjectOfType<PlayerController>();
+        Vector2 playerPos = new Vector2(player.transform.position.x, player.transform.position.y);
+
+        SpawnerSurvival nearest = spawners[0];
+
+        for (int i = 1; i < spawners.Count; i++)
+            if (Vector2.Distance(playerPos, new Vector2(spawners[i].transform.position.x, spawners[i].transform.position.y)) < Vector2.Distance(playerPos, new Vector2(nearest.transform.position.x, nearest.transform.position.y)))
+                nearest = spawners[i];
+
+        return nearest;
+    }
+
+    public void HandleSpawningEnemy()
+    {
+        enemyCount++;
+    }
+    //------------Handles counting point and keeping track of number of enemies and combo meter---------
+    public void HandleEnemyDeath(Enemy e)
+    {
+        enemyCount--;
+        Debug.Log("Enemy destroyed. Enemies remaining: " + enemyCount);
+
+        AddPoints(e.pointsYield);
+        ComboUp();
+    }
+
+    private void AddPoints(int basePoints)
+    {
+        playerScore += (int)(basePoints * comboMeter);
+
+        ui.SetScoreText(playerScore);
+    }
+
+    private void ComboUp()
+    {
+        if (!(comboMeter > 1f))
+        {
+            ui.comboText.enabled = true;
+            ui.timerCombo.enabled = true;
+        }
+
+        comboMeter += comboPerKill;
+        ui.SetComboText(comboMeter);
+
+        comboTimer.SetTimer(comboTimerMax, false, ComboReset, true);
+    }
+
+    private void ComboReset()
+    {
+        Debug.Log("ComboReset called.");
+        comboMeter = 1f;
+        ui.comboText.enabled = false;
+        ui.timerCombo.enabled = false;
     }
 }
